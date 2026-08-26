@@ -1,0 +1,13 @@
+# Environnement virtuel Python
+venv/
+.venv/
+
+# Fichiers compilés par Python
+__pycache__/
+*.pyc
+
+# Configuration de l'IDE
+.idea/
+
+# macOS
+.DS_Store
