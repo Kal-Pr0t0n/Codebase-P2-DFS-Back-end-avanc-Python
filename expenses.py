@@ -7,6 +7,7 @@ year of expenses, so the statistics are meaningful from the first run.
 import csv
 import os
 from datetime import datetime
+import math
 
 FILENAME = "emma_expenses.csv"  # or "personnal_expenses.csv"
 COLUMNS = ["date", "category", "description", "amount"]
@@ -219,13 +220,93 @@ def show_statistics():
     print(footer)  
 
 
+def get_moyen_mensual_expenses():
+    """Récupère la liste des dépenses et calcul la moyenne mensuelle dépensée"""
+    moyenne_mensuelle = 0
+    expenses = read_expenses()
+    
+    if not expenses: 
+        print("Aucune dépense enregistrée.")
+        return moyenne_mensuelle
+
+    months = set()
+    total_expenses = 0
+    for expense in expenses:
+        total_expenses += expense.amount
+        months.add(expense.date[3:])
+    
+    total_months = len(months)
+    return (total_expenses / total_months)
+    
+
+def simulate_buy_car():
+    """Simulation l'achat d'un véhicule
+    
+    [!] Attention : La notion de salaire ou de revenu fixe n'étant pas présent dans
+    le projet initiale et le fichier .csv ne contenant que des dépenses, la valeur du 
+    salaire mensuel sera donc demandé à l'utilisateur (avec une valeur initiale propsoée
+    à 2 500€)
+    """
+    # E1. Récupération des valeurs initiales permettant la simulation
+    print(" == SIMULATION D'ACHAT D'UN VEHICULE ==\n\n")
+
+    print(
+        "Pour permettre cette simulation, veuillez renseigner "
+        "les informations suivantes:")
+
+    monthly_salary = input("Votre salaire mensuel (2 500€ par défaut): ").strip()
+
+    if monthly_salary == "":
+        monthly_salary = 2500
+    try:
+        monthly_salary = float(monthly_salary)
+    except ValueError:
+        print("Montant invalide, veuillez saisir une valeur numérique.\n")
+        return
+
+    car_value = input("Veuillez indiquer le montant du véhicule à acquérir : ").strip()
+
+    try:
+        car_value = float(car_value)
+    except ValueError:
+        print("Montant invalide, veuillez saisir une valeur numérique.\n")
+        return
+    if car_value <= 0:
+        print("Le montant du véhicule doit être supérieur à 0!\n")
+        return
+    
+    print("------------------------------------------")
+    print(f"Salaire Mensuel : {monthly_salary:.2f} €")
+    print(f"Valeur du véhicule : {car_value:.2f} €")
+    print("------------------------------------------")
+
+    # E2. Récupération des valeurs de dépenses mensuelles (moyennes mensuelle)
+    moyenne_mensuelle = get_moyen_mensual_expenses()
+    print(f"Moyenne mensuelles des dépenses : {moyenne_mensuelle:.2f} € / Mois")
+    print("------------------------------------------")
+    # E3. Calcul de l'épargne, des mensualités et des mensualités maximales possibles
+    epargne_restant = monthly_salary - moyenne_mensuelle
+    if epargne_restant <= 0:
+        print("Vous dépensez plus que votre salaire, impossible d'acheter une voiture.")
+        return
+    print(f"Epargne restante : {epargne_restant:.2f} € / Mois")
+    mois_necessaires = car_value / epargne_restant
+    print(
+        "Nombre de mois restant pour épargner la totalité de la voiture :"
+        f" {math.ceil(mois_necessaires)} mois"
+        )
+    print("==============FIN DE LA SIMULATION =======================")
+
+
 def show_menu():
     """Display the available choices."""
+    print("==========================================================")
     print("=== Expense tracker ===")
     print("1. Show history")
     print("2. Add an expense")
     print("")
-    print("3. Show statistics")
+    print("3. Statistiques ")
+    print("4. Simulation achat d'une voiture")
     print("")
     print("q. Quit")
 
@@ -241,12 +322,14 @@ def main():
             add_expense()
         elif choice == "3":
             show_statistics()
+        elif choice == "4":
+            simulate_buy_car()
         elif choice == "q":
             print("See you soon!")
             break
         else:
             print(
-                "Invalid choice, please enter a number between 1 and 3"
+                "Invalid choice, please enter a number between 1 and 4"
                 " (or q to quit).\n"
                 )
 

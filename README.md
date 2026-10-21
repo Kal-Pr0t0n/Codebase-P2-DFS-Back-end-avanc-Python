@@ -128,3 +128,11 @@ le programme est constitué de de 5 autres fonctions :
 
 - Modification du menu pour y ajouter l'option "Afficher les statistiques"
 - Création de la fonction <i>show_statistics()</i> : qui permet de lister les données présentes dans le fichier de sauvegarde (en appelant une fonction déjà existante), puis en réalisant un sous-total pour chaque catégories répertoriée et enfin affiche le tableau récapitulatif final.  
+
+### b. Ajout de la fonctionnalité Simulation « achat d’une voiture »
+
+- Modification du menu pour y ajouter l'option "Simulation ACHAT D'UNE VOITURE"
+- Création de la fonction <i>simulate_buy_car()</i> : Cette fonction va demander à
+  l'utilisateur le montant de son salaire mensuel (par défaut 2500 € sera utilisé), puis
+  le montant du prix d'achat de la voiture pour ensuite calculer le nombre de mois
+  nécessaire pour épargner la totalité de la voiture.
