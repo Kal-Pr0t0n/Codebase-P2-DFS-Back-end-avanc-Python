@@ -9,6 +9,7 @@
 ### Liens utiles
 
 - **Compte GitHub** : [Kal-Pr0t0n](https://github.com/Kal-Pr0t0n)
+- **Repo GitHub perso du projet** : [Codebase-P2-DFS-Back-end-avanc-Python](https://github.com/Kal-Pr0t0n/Codebase-P2-DFS-Back-end-avanc-Python.git)
 
 ### Gestion de l'environnement virtuel (Python)
 
