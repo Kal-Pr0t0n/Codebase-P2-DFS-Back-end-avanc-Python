@@ -109,12 +109,125 @@ def add_expense():
     print(f"Expense of {expense.amount:.2f} EUR saved.\n")
 
 
+def show_statistics():
+    """Affiche le montant des dépenses par catégorie"""
+    # E1. Récupération des valeurs : 
+    expenses = read_expenses()
+
+    if not expenses: 
+        print("Aucune dépense enregistrée.")
+        return
+    
+    # E2. On parcourt toutes les données et fait la sommes par catégorie 
+    categories = {}
+    months = set()
+    for expense in expenses:
+        if expense.category not in categories.keys():
+            categories[expense.category] = [expense.amount, 0] 
+        else:
+            categories[expense.category][0] += expense.amount
+        months.add(expense.date[3:])
+    total_months = len(months)
+    for category in categories:
+        categories[category][1] = categories[category][0] / total_months
+
+    # E3. Affiche le résultat sous forme de tableau
+    print("\n --- Expense statistics ---")
+    
+    max_spacement = len('Category')
+    max_spacement_total = len("   Total (€)")
+    max_spacement_moy_month = len("   Moyenne / mois")
+    for category in sorted(categories.keys()):
+        if len(category) > max_spacement:
+            max_spacement = len(category)
+        if len(str(categories[category][0])) > max_spacement_total:
+            max_spacement_total = len(str(categories[category][0]))
+        if (len(str(categories[category][1]))) > max_spacement_moy_month:
+            max_spacement_moy_month = len(str(categories[category][1]))
+
+    max_spacement += 4
+    total_all = 0
+    corps_tb = ""
+    for category in sorted(categories.keys()):
+        total = categories[category][0]
+        avg = categories[category][1]
+        
+        total_str = f"{total:.2f}"
+        avg_str = f"{avg:.2f}"
+
+        corps_tb += (
+            f"| {category}{' ' * (max_spacement - len(category))} "
+            f"|{' ' * (
+                max_spacement_total 
+                - len(f" {total_str} € " )-2
+                )} {total_str} € "
+            f"|{" " * (
+                max_spacement_moy_month 
+                - len(f" {avg_str} € ")
+                )}{avg_str} € |\n"
+        )
+         
+        total_all += categories[category][0]
+    moy_total_months = total_all / total_months
+
+    
+    header = (
+        " " + "-" * (max_spacement - 2) +
+        "-" * (max_spacement_total+3) +
+        "-" * (max_spacement_moy_month) + " \n"
+    )
+    header += (
+(
+            f"| Category{' ' * (max_spacement - len("Category"))} "
+            f"|{' ' * (
+                max_spacement_total 
+                - len(f" {"Total (€)"}   " )
+                )} Total (€) "
+            f"|{" " * (
+                max_spacement_moy_month 
+                - len(f" Moyenne / Mois ")
+                )}Moyenne / Mois |\n"
+        )
+    )
+    header += (
+        " " + "-" * (max_spacement - 2) +
+        "-" * (max_spacement_total + 3) +
+        "-" * (max_spacement_moy_month) + " "
+    )    
+
+    footer =( 
+        " " + "-" * (max_spacement - 2) 
+        + "-" * (max_spacement_total+3)
+        + "-" * (max_spacement_moy_month) + " \n")
+    footer += (
+        f"| {' '*(
+            max_spacement + max_spacement_total 
+            - len(f"Total des dépenses : {total_all:.2f} € "))}"
+        f"Total des dépenses : {total_all:.2f}  €|{' ' * len(f"{moy_total_months:.2f} "
+        f"€/Mois " + " |")}|\n") 
+    footer += (f"| {' ' * (max_spacement + max_spacement_total 
+        - len(f"Nombre de mois couverts : {total_months} "))}"
+        f"Nombre de mois couverts : {total_months} | {moy_total_months:.2f} "
+        f"€/Mois " + " |\n")
+    footer += ( 
+        " " + "-"*(max_spacement - 2) 
+        + "-" * (max_spacement_total + 3)
+        + "-" * (max_spacement_moy_month) + " ")      
+
+    print(header)
+    print(corps_tb[:len(corps_tb) - 1])
+    print(footer)  
+
+
 def show_menu():
     """Display the available choices."""
     print("=== Expense tracker ===")
     print("1. Show history")
     print("2. Add an expense")
-    print("3. Quit")
+    print("")
+    print("3. Show statistics")
+    print("")
+    print("q. Quit")
 
 
 def main():
@@ -127,10 +240,15 @@ def main():
         elif choice == "2":
             add_expense()
         elif choice == "3":
+            show_statistics()
+        elif choice == "q":
             print("See you soon!")
             break
         else:
-            print("Invalid choice, please enter a number between 1 and 3.\n")
+            print(
+                "Invalid choice, please enter a number between 1 and 3"
+                " (or q to quit).\n"
+                )
 
 
 if __name__ == "__main__":

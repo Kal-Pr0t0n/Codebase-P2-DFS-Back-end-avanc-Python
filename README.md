@@ -121,3 +121,10 @@ le programme est constitué de de 5 autres fonctions :
 - <i>save_expense() (ligne 40 - 64)</i> : cette fonction permet d'enregistrer une nouvelle dépense de le fichier de sauvegarde <i>emma_expenses.csv</i>. Une première vérification est effetuée sur l'existance du fichier, si le fichier existe, il est ouvert en écriture (mode <i>append</i> précisé avec l'argument <i>"a"</i>). Et la ligne de dépense est rajouté à la fin du fichier. si le fichier n'existe pas, un fichier vide est créé, la ligne des titres de colonnes est d'abord ajouté, puis la nouvelle ligne de dépense.
 
 - <i>read_expenses() (ligne 18 - 38)</i> : Cette fonction va vérifier l'existance du fichier de sauvegarde <i>emma_expenses.csv</i>. Si le fichier n'existe pas, il retourne une liste vide. Si le fichier existe, il est ouvert en mode lecture (mode <i>"r"</i>) puis chaque ligne lue est ajouté dans la liste des données.
+
+## VI. DEVELOPPEMENT DES FONCTIONNALITES DEMANDEES DANS LE CAHIER DES CHARGES
+
+### a. Statistiques par catégorie
+
+- Modification du menu pour y ajouter l'option "Afficher les statistiques"
+- Création de la fonction <i>show_statistics()</i> : qui permet de lister les données présentes dans le fichier de sauvegarde (en appelant une fonction déjà existante), puis en réalisant un sous-total pour chaque catégories répertoriée et enfin affiche le tableau récapitulatif final.  
