@@ -298,6 +298,86 @@ def simulate_buy_car():
     print("==============FIN DE LA SIMULATION =======================")
 
 
+def get_moyen_mensual_of_specific_expense(categorie: str="housing"):
+    """Récupère la liste des dépenses et calcul la moyenne mensuelle dépensée
+    pour une catégorie précise. [par défaut "logement"]
+    """
+    expenses = read_expenses()
+    
+    if not expenses: 
+        print("Aucune dépense enregistrée.")
+        return 0,0
+    
+    months = set()
+    total_expenses = 0
+    total_expenses_by_category = 0
+    for expense in expenses:
+        if expense.category == categorie:
+            total_expenses_by_category += expense.amount
+        total_expenses += expense.amount
+        months.add(expense.date[3:])
+    
+    total_months = len(months)
+    return (total_expenses / total_months), (total_expenses_by_category / total_months)
+    
+    
+
+def simulate_mortgage():
+    """Simulation d'un prêt immobilier
+    
+    [!] Attention : La notion de salaire ou de revenu fixe n'étant pas présent dans
+    le projet initiale et le fichier .csv ne contenant que des dépenses, la valeur du 
+    salaire mensuel sera donc demandé à l'utilisateur (avec une valeur initiale propsoée
+    à 2 500€)
+    """
+
+    # E1. Demande des informations nécessaires à la simulation
+    print(" == SIMULATION D'UNE DEMANDE DE PRÊT IMMOBILIER ==")
+    monthly_salary = input(
+        "Veuillez préciser votre salaire mensuel "
+        "(2 500€ par défaut): ").strip()
+
+    if monthly_salary == "":
+        monthly_salary = 2500
+    try:
+        monthly_salary = float(monthly_salary)
+    except ValueError:
+        print("Montant invalide, veuillez saisir une valeur numérique.\n")
+        return
+
+    if monthly_salary <= 0:
+        print("Le salaire doit être supérieur à 0!\n")
+        return
+
+    # E2. Récupération du montant moyen de la catégorie "Logement" 
+    #     et calcul de l'épargne disponible
+    total_expense, housing_average = get_moyen_mensual_of_specific_expense()
+    print("\n")
+    print(f"Moyenne mensuelle des dépenses de logement : {housing_average:.2f} € / Mois")
+    print(f"Moyenne mensuelle de toutes les dépenses : {total_expense:.2f} € / Mois")
+    print("------------------------------------------")
+    epargne_restant = monthly_salary - (total_expense - housing_average)
+    if epargne_restant <= 0:
+        print("Vous dépensez plus que votre salaire, impossible de contracter un prêt.")
+        return
+    print(f"Epargne possible (en retirant le montant du logement actuel) : {epargne_restant:.2f} € / Mois")
+    print("------------------------------------------")
+
+    # E3. Calcul du montant empruntable à partir de la formule fournie
+    #     Formule : Montant empruntable = (Salaire Mensuel - Dépenses Mensuelles) 
+    #               * 12 * Taux d'endettement maximum
+    #     Taux d'endettement maximum = 35 %
+
+    print(
+        "Formule : Montant empruntable = (Salaire Mensuel - Dépenses Mensuelles) * 12 "
+        "* Taux d'endettement maximum"
+        )
+    montant_empruntable = epargne_restant * 12 * 0.35
+    print(f"Pour une mensualité de {(montant_empruntable/12):.2f} € mensuelle")
+    print(f"soit un Montant empruntable maximum (sur 25 ans):  {(montant_empruntable *25):.2f} €")
+    print("------------------------------------------")
+
+
 def show_menu():
     """Display the available choices."""
     print("==========================================================")
@@ -307,6 +387,7 @@ def show_menu():
     print("")
     print("3. Statistiques ")
     print("4. Simulation achat d'une voiture")
+    print("5. Simulation prêt immobilier")
     print("")
     print("q. Quit")
 
@@ -324,12 +405,14 @@ def main():
             show_statistics()
         elif choice == "4":
             simulate_buy_car()
+        elif choice == "5":
+            simulate_mortgage()
         elif choice == "q":
             print("See you soon!")
             break
         else:
             print(
-                "Invalid choice, please enter a number between 1 and 4"
+                "Invalid choice, please enter a number between 1 and 5"
                 " (or q to quit).\n"
                 )
 
